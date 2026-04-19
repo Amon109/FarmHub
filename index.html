@@ -507,13 +507,45 @@ window.onload = () => {
 };
 
 // จำลองราคาขยับแบบ Real-time
+// --- ส่วนจำลองการขยับกราฟแบบ Live Streaming ---
+
 setInterval(() => {
-    products.forEach(p => {
-        p.change = Math.round((p.change + (Math.random() - 0.5) * 0.2) * 10) / 10;
-    });
+    if (!priceChart || !volumeChart) return;
+
+    // 1. สุ่มราคาใหม่ (จำลองการแกว่งของตลาด)
+    const volatility = currentProduct.price * 0.005; 
+    const change = (Math.random() - 0.5) * volatility;
+    currentProduct.price = Math.round((currentProduct.price + change) * 100) / 100;
+
+    // 2. อัปเดตข้อมูลในอาร์เรย์ของกราฟราคา (Price Chart)
+    const priceData = priceChart.data.datasets[0].data;
+    const labels = priceChart.data.labels;
+
+    // ดึงตัวแรกออก แล้วใส่ตัวใหม่เข้าไปที่ท้ายสุด
+    priceData.shift(); 
+    priceData.push(currentProduct.price);
+
+    // อัปเดตเวลา (Labels) ให้ขยับตาม
+    labels.shift();
+    const now = new Date();
+    labels.push(now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+
+    // 3. อัปเดต MA (Moving Average) ให้คำนวณใหม่ตามข้อมูลที่ขยับ
+    priceChart.data.datasets[1].data = calculateMA(priceData, 7);
+    priceChart.data.datasets[2].data = calculateMA(priceData, 25);
+
+    // 4. อัปเดต Volume (สุ่มปริมาณการซื้อขายใหม่)
+    const volData = volumeChart.data.datasets[0].data;
+    volData.shift();
+    volData.push(Math.round(currentProduct.price * 80 * (0.5 + Math.random())));
+
+    // 5. สั่งให้กราฟวาดใหม่ (update)
+    // ใช้โหมด 'none' เพื่อให้มันไหลลื่นแบบไม่กระตุก หรือใส่เลข ms เพื่อให้มี Animation
+    priceChart.update('active'); 
+    volumeChart.update('active');
+
+    // 6. อัปเดตตัวเลขบนหน้าจอ
     renderProductList();
     updateHeader();
-}, 5000);
-</script>
-</body>
-</html>
+
+}, 2000); // ปรับเลขนี้ (ms) ให้เร็วขึ้นได้ เช่น 1000 = 1 วินาที
