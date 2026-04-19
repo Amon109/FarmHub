@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🌾 FarmHub – กราฟราคาพืชผลเรียลไทม์</title>
-  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js)"></script>
+
+  <!-- โหลดไลบรารีกราฟจาก CDN -->
+  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.min.js)"></script>
+
   <style>
     body {
       margin: 0;
@@ -37,7 +40,7 @@
       color: #fff;
       text-align: center;
       font-size: 0.9em;
-      padding: 5px 0;
+      padding: 6px 0;
     }
   </style>
 </head>
@@ -48,36 +51,42 @@
   <footer>อัปเดตราคาอัตโนมัติทุก 2 วินาที | © 2024 FarmHub</footer>
 
   <script>
-    const chart = LightweightCharts.createChart(document.getElementById("chart"), {
+    // ✅ สร้างกราฟแท่งเทียน
+    const chart = LightweightCharts.createChart(document.getElementById('chart'), {
       layout: { backgroundColor: '#f4f9f4', textColor: '#222' },
-      grid: { vertLines: { color: '#e0e6e0' }, horzLines: { color: '#e0e6e0' } },
+      grid: {
+        vertLines: { color: '#e0e6e0' },
+        horzLines: { color: '#e0e6e0' }
+      },
       width: document.body.clientWidth * 0.95,
       height: window.innerHeight * 0.7,
       timeScale: { timeVisible: true, secondsVisible: false },
     });
 
-    const candles = chart.addCandlestickSeries({
+    const candleSeries = chart.addCandlestickSeries({
       upColor: '#4CAF50',
-      borderUpColor: '#388E3C',
-      wickUpColor: '#388E3C',
+      borderUpColor: '#4CAF50',
+      wickUpColor: '#4CAF50',
       downColor: '#e53935',
-      borderDownColor: '#c62828',
-      wickDownColor: '#c62828'
+      borderDownColor: '#e53935',
+      wickDownColor: '#e53935'
     });
 
+    // ✅ สร้างข้อมูลจำลอง
     let data = [];
     let base = 10000;
-    let time = Math.floor(Date.now() / 1000) - 60 * 50;
+    let startTime = Math.floor(Date.now() / 1000) - 60 * 60;
 
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 50; i++) {
       const open = base + (Math.random() - 0.5) * 400;
-      const close = open + (Math.random() - 0.5) * 400;
+      const close = open + (Math.random() - 0.5) * 300;
       const high = Math.max(open, close) + Math.random() * 200;
       const low = Math.min(open, close) - Math.random() * 200;
-      data.push({ time: time + i * 600, open, high, low, close });
+      data.push({ time: startTime + i * 600, open, high, low, close });
     }
-    candles.setData(data);
+    candleSeries.setData(data);
 
+    // ✅ เคลื่อนไหวกราฟทุก 2 วิ
     setInterval(() => {
       const last = data[data.length - 1];
       const newTime = last.time + 600;
@@ -87,7 +96,7 @@
       const low = Math.min(open, close) - Math.random() * 150;
       data.push({ time: newTime, open, high, low, close });
       if (data.length > 80) data.shift();
-      candles.setData(data);
+      candleSeries.setData(data);
     }, 2000);
   </script>
 </body>
