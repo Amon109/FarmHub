@@ -4,14 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FarmHub - ติดตามราคาสินค้าเกษตร</title>
-    <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/chart.js)"></script>
-    <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom)"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -20,7 +15,6 @@
             min-height: 100vh;
         }
 
-        /* Header */
         .header {
             background: #161b22;
             padding: 15px 20px;
@@ -39,18 +33,14 @@
             color: #58a6ff;
         }
 
-        .logo span {
-            color: #3fb950;
-        }
+        .logo span { color: #3fb950; }
 
-        /* Main Layout */
         .container {
             display: grid;
             grid-template-columns: 250px 1fr 300px;
             height: calc(100vh - 60px);
         }
 
-        /* Sidebar - รายการสินค้า */
         .sidebar {
             background: #161b22;
             border-right: 1px solid #30363d;
@@ -64,9 +54,7 @@
             color: #8b949e;
         }
 
-        .product-list {
-            list-style: none;
-        }
+        .product-list { list-style: none; }
 
         .product-item {
             padding: 12px 15px;
@@ -78,30 +66,16 @@
             align-items: center;
         }
 
-        .product-item:hover {
-            background: #21262d;
-        }
+        .product-item:hover { background: #21262d; }
 
         .product-item.active {
             background: #1f6feb33;
             border-left: 3px solid #58a6ff;
         }
 
-        .product-name {
-            font-weight: 500;
-        }
-
-        .product-price {
-            font-size: 14px;
-        }
-
-        .price-up {
-            color: #3fb950;
-        }
-
-        .price-down {
-            color: #f85149;
-        }
+        .product-name { font-weight: 500; font-size: 14px; }
+        .price-up { color: #3fb950; }
+        .price-down { color: #f85149; }
 
         .price-change {
             font-size: 12px;
@@ -109,21 +83,14 @@
             border-radius: 4px;
         }
 
-        .change-up {
-            background: #3fb95033;
-            color: #3fb950;
-        }
+        .change-up { background: #3fb95033; color: #3fb950; }
+        .change-down { background: #f8514933; color: #f85149; }
 
-        .change-down {
-            background: #f8514933;
-            color: #f85149;
-        }
-
-        /* Main Chart Area */
         .main-content {
             padding: 20px;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .chart-header {
@@ -139,20 +106,10 @@
             gap: 15px;
         }
 
-        .current-product h2 {
-            font-size: 28px;
-            color: #f0f6fc;
-        }
+        .current-product h2 { font-size: 24px; color: #f0f6fc; }
+        .current-price { font-size: 28px; font-weight: bold; }
 
-        .current-price {
-            font-size: 32px;
-            font-weight: bold;
-        }
-
-        .timeframe-buttons {
-            display: flex;
-            gap: 5px;
-        }
+        .timeframe-buttons { display: flex; gap: 5px; }
 
         .timeframe-btn {
             padding: 8px 16px;
@@ -162,94 +119,17 @@
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
-        }
-
-        .timeframe-btn:hover {
-            background: #30363d;
-        }
-
-        .timeframe-btn.active {
-            background: #1f6feb;
-            border-color: #1f6feb;
-            color: white;
-        }
-
-        .chart-container {
-            flex: 1;
-            background: #161b22;
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid #30363d;
-            position: relative;
-        }
-
-        /* Right Panel - ข้อมูลเพิ่มเติม */
-        .right-panel {
-            background: #161b22;
-            border-left: 1px solid #30363d;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .panel-section {
-            margin-bottom: 25px;
-        }
-
-        .panel-title {
-            font-size: 14px;
-            color: #8b949e;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .stat-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .stat-item {
-            background: #21262d;
-            padding: 12px;
-            border-radius: 8px;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #8b949e;
-            margin-bottom: 4px;
-        }
-
-        .stat-value {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        /* News Section */
-        .news-item {
-            background: #21262d;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .news-time {
-            font-size: 11px;
-            color: #8b949e;
-            margin-bottom: 5px;
-        }
-
-        .news-title {
             font-size: 13px;
-            line-height: 1.4;
         }
 
-        /* Chart Type Buttons */
+        .timeframe-btn:hover { background: #30363d; }
+        .timeframe-btn.active { background: #1f6feb; border-color: #1f6feb; color: white; }
+
         .chart-controls {
             display: flex;
             gap: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            align-items: center;
         }
 
         .chart-type-btn {
@@ -268,7 +148,6 @@
             color: #0d1117;
         }
 
-        /* Indicators */
         .indicator-tag {
             display: inline-block;
             padding: 4px 10px;
@@ -277,10 +156,82 @@
             border-radius: 20px;
             font-size: 12px;
             margin-right: 5px;
-            margin-bottom: 5px;
         }
 
-        /* Weather Widget */
+        .charts-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 0;
+        }
+
+        .chart-container {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #30363d;
+            flex: 3;
+            min-height: 0;
+            position: relative;
+        }
+
+        .volume-container {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 12px 15px;
+            border: 1px solid #30363d;
+            flex: 1;
+            min-height: 0;
+            position: relative;
+        }
+
+        .volume-label {
+            font-size: 11px;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .right-panel {
+            background: #161b22;
+            border-left: 1px solid #30363d;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .panel-section { margin-bottom: 25px; }
+
+        .panel-title {
+            font-size: 14px;
+            color: #8b949e;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .stat-item {
+            background: #21262d;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .stat-label { font-size: 12px; color: #8b949e; margin-bottom: 4px; }
+        .stat-value { font-size: 16px; font-weight: 600; }
+
+        .news-item {
+            background: #21262d;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .news-time { font-size: 11px; color: #8b949e; margin-bottom: 5px; }
+        .news-title { font-size: 13px; line-height: 1.4; }
+
         .weather-widget {
             background: linear-gradient(135deg, #1a5fb4, #3584e4);
             padding: 15px;
@@ -288,422 +239,281 @@
             margin-bottom: 15px;
         }
 
-        .weather-main {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
+        .weather-main { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .weather-icon { font-size: 36px; }
+        .weather-temp { font-size: 28px; font-weight: bold; }
+        .weather-location { font-size: 12px; opacity: 0.8; }
 
-        .weather-icon {
-            font-size: 36px;
-        }
-
-        .weather-temp {
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .weather-location {
-            font-size: 12px;
-            opacity: 0.8;
-        }
-
-        /* Responsive */
         @media (max-width: 1200px) {
-            .container {
-                grid-template-columns: 200px 1fr;
-            }
-            .right-panel {
-                display: none;
-            }
+            .container { grid-template-columns: 200px 1fr; }
+            .right-panel { display: none; }
         }
 
         @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-            .sidebar {
-                display: none;
-            }
+            .container { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo">
-            🌾 <span>Agri</span>View
-        </div>
-        <div class="timeframe-buttons">
-            <button class="timeframe-btn" onclick="changeTimeframe('1D')">1D</button>
-            <button class="timeframe-btn active" onclick="changeTimeframe('1W')">1W</button>
-            <button class="timeframe-btn" onclick="changeTimeframe('1M')">1M</button>
-            <button class="timeframe-btn" onclick="changeTimeframe('3M')">3M</button>
-            <button class="timeframe-btn" onclick="changeTimeframe('1Y')">1Y</button>
-        </div>
-    </header>
 
-    <div class="container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">📊 สินค้าเกษตร</div>
-            <ul class="product-list" id="productList">
-                <!-- Generated by JS -->
-            </ul>
-        </aside>
+<header class="header">
+    <div class="logo">🌱 Farm<span>Hub</span></div>
+    <div class="timeframe-buttons">
+        <button class="timeframe-btn" onclick="changeTimeframe('1D')">1D</button>
+        <button class="timeframe-btn active" onclick="changeTimeframe('1W')">1W</button>
+        <button class="timeframe-btn" onclick="changeTimeframe('1M')">1M</button>
+        <button class="timeframe-btn" onclick="changeTimeframe('3M')">3M</button>
+        <button class="timeframe-btn" onclick="changeTimeframe('1Y')">1Y</button>
+    </div>
+</header>
 
-        <!-- Main Chart -->
-        <main class="main-content">
-            <div class="chart-header">
-                <div class="current-product">
-                    <h2 id="currentProductName">🌾 ข้าวหอมมะลิ</h2>
-                    <span class="current-price price-up" id="currentPrice">฿15,800</span>
-                    <span class="price-change change-up" id="priceChange">+2.5%</span>
-                </div>
+<div class="container">
+    <aside class="sidebar">
+        <div class="sidebar-header">📊 สินค้าเกษตร</div>
+        <ul class="product-list" id="productList"></ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="chart-header">
+            <div class="current-product">
+                <h2 id="currentProductName">🌾 ข้าวหอมมะลิ</h2>
+                <span class="current-price price-up" id="currentPrice">฿15,800</span>
+                <span class="price-change change-up" id="priceChange">+2.5%</span>
             </div>
+        </div>
 
-            <div class="chart-controls">
-                <button class="chart-type-btn active" onclick="changeChartType('line')">📈 Line</button>
-                <button class="chart-type-btn" onclick="changeChartType('bar')">📊 Bar</button>
-                <div style="margin-left: auto;">
-                    <span class="indicator-tag">MA 7</span>
-                    <span class="indicator-tag">MA 25</span>
-                </div>
+        <div class="chart-controls">
+            <button class="chart-type-btn active" onclick="changeChartType('line')">📈 Line</button>
+            <button class="chart-type-btn" onclick="changeChartType('bar')">📊 Bar</button>
+            <div style="margin-left: auto;">
+                <span class="indicator-tag">MA 7</span>
+                <span class="indicator-tag">MA 25</span>
             </div>
+        </div>
 
+        <div class="charts-wrapper">
             <div class="chart-container">
                 <canvas id="priceChart"></canvas>
             </div>
-        </main>
-
-        <!-- Right Panel -->
-        <aside class="right-panel">
-            <!-- Weather -->
-            <div class="weather-widget">
-                <div class="weather-main">
-                    <span class="weather-icon">☀️</span>
-                    <span class="weather-temp">32°C</span>
-                </div>
-                <div class="weather-location">กรุงเทพฯ - แดดจัด เหมาะแก่การเก็บเกี่ยว</div>
+            <div class="volume-container">
+                <div class="volume-label">📦 ปริมาณการซื้อขาย (Volume)</div>
+                <canvas id="volumeChart"></canvas>
             </div>
+        </div>
+    </main>
 
-            <!-- Stats -->
-            <div class="panel-section">
-                <div class="panel-title">📈 สถิติราคา</div>
-                <div class="stat-grid">
-                    <div class="stat-item">
-                        <div class="stat-label">สูงสุด 52W</div>
-                        <div class="stat-value price-up">฿16,200</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">ต่ำสุด 52W</div>
-                        <div class="stat-value price-down">฿13,800</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">เฉลี่ย</div>
-                        <div class="stat-value">฿15,100</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">ปริมาณ</div>
-                        <div class="stat-value">2.4M ตัน</div>
-                    </div>
-                </div>
+    <aside class="right-panel">
+        <div class="weather-widget">
+            <div class="weather-main">
+                <span class="weather-icon">☀️</span>
+                <span class="weather-temp">32°C</span>
             </div>
+            <div class="weather-location">กรุงเทพฯ - แดดจัด เหมาะแก่การเก็บเกี่ยว</div>
+        </div>
 
-            <!-- Market Info -->
-            <div class="panel-section">
-                <div class="panel-title">🏪 ตลาดซื้อขาย</div>
-                <div class="stat-grid">
-                    <div class="stat-item">
-                        <div class="stat-label">ตลาดกลาง</div>
-                        <div class="stat-value">฿15,800</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">ส่งออก FOB</div>
-                        <div class="stat-value">$520</div>
-                    </div>
-                </div>
+        <div class="panel-section">
+            <div class="panel-title">📈 สถิติราคา</div>
+            <div class="stat-grid">
+                <div class="stat-item"><div class="stat-label">สูงสุด 52W</div><div class="stat-value price-up">฿16,200</div></div>
+                <div class="stat-item"><div class="stat-label">ต่ำสุด 52W</div><div class="stat-value price-down">฿13,800</div></div>
+                <div class="stat-item"><div class="stat-label">เฉลี่ย</div><div class="stat-value">฿15,100</div></div>
+                <div class="stat-item"><div class="stat-label">ปริมาณ</div><div class="stat-value">2.4M ตัน</div></div>
             </div>
+        </div>
 
-            <!-- News -->
-            <div class="panel-section">
-                <div class="panel-title">📰 ข่าวสาร</div>
-                <div class="news-item">
-                    <div class="news-time">2 ชั่วโมงที่แล้ว</div>
-                    <div class="news-title">ราคาข้าวพุ่งหลังอินเดียระงับส่งออก</div>
-                </div>
-                <div class="news-item">
-                    <div class="news-time">5 ชั่วโมงที่แล้ว</div>
-                    <div class="news-title">พยากรณ์ผลผลิตข้าวนาปี 67 เพิ่ม 3%</div>
-                </div>
-                <div class="news-item">
-                    <div class="news-time">1 วันที่แล้ว</div>
-                    <div class="news-title">จีนเพิ่มโควตานำเข้าข้าวไทย</div>
-                </div>
+        <div class="panel-section">
+            <div class="panel-title">📰 ข่าวสาร</div>
+            <div class="news-item">
+                <div class="news-time">2 ชั่วโมงที่แล้ว</div>
+                <div class="news-title">ราคาข้าวพุ่งหลังอินเดียระงับส่งออก</div>
             </div>
-        </aside>
-    </div>
+            <div class="news-item">
+                <div class="news-time">5 ชั่วโมงที่แล้ว</div>
+                <div class="news-title">พยากรณ์ผลผลิตข้าวนาปี 67 เพิ่ม 3%</div>
+            </div>
+        </div>
+    </aside>
+</div>
 
-    <script>
-        // ข้อมูลสินค้าเกษตร
-        const products = [
-            { id: 'rice', name: '🌾 ข้าวหอมมะลิ', price: 15800, change: 2.5, unit: 'บาท/ตัน' },
-            { id: 'rice2', name: '🌾 ข้าวขาว 5%', price: 14200, change: 1.8, unit: 'บาท/ตัน' },
-            { id: 'rubber', name: '🌳 ยางพารา', price: 52.5, change: -1.2, unit: 'บาท/กก.' },
-            { id: 'palm', name: '🌴 ปาล์มน้ำมัน', price: 5.8, change: 0.5, unit: 'บาท/กก.' },
-            { id: 'sugar', name: '🍬 อ้อย', price: 1050, change: -0.8, unit: 'บาท/ตัน' },
-            { id: 'cassava', name: '🥔 มันสำปะหลัง', price: 2.85, change: 3.2, unit: 'บาท/กก.' },
-            { id: 'corn', name: '🌽 ข้าวโพด', price: 8.9, change: 1.1, unit: 'บาท/กก.' },
-            { id: 'durian', name: '🥭 ทุเรียน', price: 180, change: -2.5, unit: 'บาท/กก.' },
-            { id: 'mango', name: '🥭 มะม่วง', price: 45, change: 4.2, unit: 'บาท/กก.' },
-            { id: 'shrimp', name: '🦐 กุ้งขาว', price: 145, change: -0.5, unit: 'บาท/กก.' },
-            { id: 'chicken', name: '🐔 ไก่เนื้อ', price: 42, change: 0.8, unit: 'บาท/กก.' },
-            { id: 'pork', name: '🐷 หมูเนื้อแดง', price: 135, change: -1.5, unit: 'บาท/กก.' },
-        ];
+<script>
+// ข้อมูลเดิมของคุณ
+const products = [
+    { id: 'rice',    name: '🌾 ข้าวหอมมะลิ',  price: 15800, change: 2.5,  unit: 'บาท/ตัน' },
+    { id: 'rice2',   name: '🌾 ข้าวขาว 5%',    price: 14200, change: 1.8,  unit: 'บาท/ตัน' },
+    { id: 'rubber',  name: '🌳 ยางพารา',        price: 52.5,  change: -1.2, unit: 'บาท/กก.' },
+    { id: 'palm',    name: '🌴 ปาล์มน้ำมัน',    price: 5.8,   change: 0.5,  unit: 'บาท/กก.' },
+    { id: 'sugar',   name: '🍬 อ้อย',           price: 1050,  change: -0.8, unit: 'บาท/ตัน' },
+    { id: 'cassava', name: '🥔 มันสำปะหลัง',    price: 2.85,  change: 3.2,  unit: 'บาท/กก.' },
+    { id: 'corn',    name: '🌽 ข้าวโพด',        price: 8.9,   change: 1.1,  unit: 'บาท/กก.' },
+    { id: 'durian',  name: '🍈 ทุเรียน',        price: 180,   change: -2.5, unit: 'บาท/กก.' },
+    { id: 'mango',   name: '🥭 มะม่วง',         price: 45,    change: 4.2,  unit: 'บาท/กก.' },
+    { id: 'shrimp',  name: '🦐 กุ้งขาว',        price: 145,   change: -0.5, unit: 'บาท/กก.' },
+    { id: 'chicken', name: '🐔 ไก่เนื้อ',        price: 42,    change: 0.8,  unit: 'บาท/กก.' },
+    { id: 'pork',    name: '🐷 หมูเนื้อแดง',    price: 135,   change: -1.5, unit: 'บาท/กก.' },
+];
 
-        let currentProduct = products[0];
-        let chart = null;
-        let currentTimeframe = '1W';
-        let currentChartType = 'line';
+let currentProduct = products[0];
+let priceChart = null;
+let volumeChart = null;
+let currentTimeframe = '1W';
+let currentChartType = 'line';
 
-        // สร้างข้อมูลราคาจำลอง
-        function generatePriceData(basePrice, days, volatility = 0.02) {
-            const data = [];
-            const labels = [];
-            let price = basePrice * 0.95;
-            const now = new Date();
+function seededRandom(seed) {
+    let s = seed;
+    return function() {
+        s = (s * 9301 + 49297) % 233280;
+        return s / 233280;
+    };
+}
 
-            for (let i = days; i >= 0; i--) {
-                const date = new Date(now);
-                date.setDate(date.getDate() - i);
-                labels.push(date.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }));
-                
-                const change = (Math.random() - 0.48) * volatility * price;
-                price = Math.max(price * 0.8, Math.min(price * 1.2, price + change));
-                data.push(Math.round(price * 100) / 100);
+function generatePriceData(basePrice, days) {
+    const rand = seededRandom(basePrice * days);
+    const labels = [];
+    const data = [];
+    let price = basePrice * 0.93;
+    const now = new Date();
+
+    for (let i = days; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(d.getDate() - i);
+        labels.push(d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }));
+        const volatility = basePrice * 0.018;
+        price += (rand() - 0.47) * volatility;
+        price = Math.max(basePrice * 0.75, Math.min(basePrice * 1.25, price));
+        data.push(Math.round(price * 100) / 100);
+    }
+    return { labels, data };
+}
+
+function generateVolumeData(count, basePrice) {
+    const rand = seededRandom(basePrice * 777);
+    const base = basePrice * 80;
+    return Array.from({ length: count }, () => Math.round(base * (0.4 + rand() * 1.2)));
+}
+
+function calculateMA(data, period) {
+    return data.map((_, i) => {
+        if (i < period - 1) return null;
+        const slice = data.slice(i - period + 1, i + 1);
+        const avg = slice.reduce((a, b) => a + b, 0) / period;
+        return Math.round(avg * 100) / 100;
+    });
+}
+
+function renderProductList() {
+    document.getElementById('productList').innerHTML = products.map(p => `
+        <li class="product-item ${p.id === currentProduct.id ? 'active' : ''}" onclick="selectProduct('${p.id}')">
+            <div>
+                <div class="product-name">${p.name}</div>
+                <div style="font-size:11px;color:#8b949e">${p.unit}</div>
+            </div>
+            <div style="text-align:right">
+                <div style="font-size:14px" class="${p.change >= 0 ? 'price-up' : 'price-down'}">${p.price.toLocaleString()}</div>
+                <span class="price-change ${p.change >= 0 ? 'change-up' : 'change-down'}">${p.change >= 0 ? '+' : ''}${p.change}%</span>
+            </div>
+        </li>
+    `).join('');
+}
+
+function updateHeader() {
+    const isUp = currentProduct.change >= 0;
+    document.getElementById('currentProductName').textContent = currentProduct.name;
+    document.getElementById('currentPrice').textContent = `฿${currentProduct.price.toLocaleString()}`;
+    document.getElementById('currentPrice').className = `current-price ${isUp ? 'price-up' : 'price-down'}`;
+    document.getElementById('priceChange').textContent = `${isUp ? '+' : ''}${currentProduct.change}%`;
+    document.getElementById('priceChange').className = `price-change ${isUp ? 'change-up' : 'change-down'}`;
+}
+
+function selectProduct(id) {
+    currentProduct = products.find(p => p.id === id);
+    renderProductList();
+    updateHeader();
+    updateChart();
+}
+
+function changeTimeframe(tf) {
+    currentTimeframe = tf;
+    document.querySelectorAll('.timeframe-btn').forEach(btn => btn.classList.toggle('active', btn.textContent.trim() === tf));
+    updateChart();
+}
+
+function changeChartType(type) {
+    currentChartType = type;
+    document.querySelectorAll('.chart-type-btn').forEach(btn => btn.classList.toggle('active', btn.textContent.includes(type === 'line' ? 'Line' : 'Bar')));
+    updateChart();
+}
+
+function updateChart() {
+    const daysMap = { '1D': 1, '1W': 7, '1M': 30, '3M': 90, '1Y': 365 };
+    const days = daysMap[currentTimeframe];
+    const { labels, data } = generatePriceData(currentProduct.price, days);
+    const ma7  = calculateMA(data, Math.min(7,  data.length));
+    const ma25 = calculateMA(data, Math.min(25, data.length));
+    const volData = generateVolumeData(data.length, currentProduct.price);
+
+    const isUp = currentProduct.change >= 0;
+    const mainColor = isUp ? '#3fb950' : '#f85149';
+
+    const priceCtx = document.getElementById('priceChart').getContext('2d');
+    const gradient = priceCtx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, isUp ? 'rgba(63,185,80,0.3)' : 'rgba(248,81,73,0.3)');
+    gradient.addColorStop(1, 'rgba(13,17,23,0)');
+
+    if (priceChart) priceChart.destroy();
+    priceChart = new Chart(priceCtx, {
+        type: currentChartType,
+        data: {
+            labels,
+            datasets: [
+                { label: currentProduct.name, data, borderColor: mainColor, backgroundColor: currentChartType === 'line' ? gradient : mainColor + '88', borderWidth: 2, fill: true, tension: 0.3, pointRadius: days <= 7 ? 4 : 0 },
+                { label: 'MA 7', data: ma7, borderColor: '#f0883e', borderDash: [5, 5], fill: false, pointRadius: 0, tension: 0.3, type: 'line' },
+                { label: 'MA 25', data: ma25, borderColor: '#a371f7', borderDash: [5, 5], fill: false, pointRadius: 0, tension: 0.3, type: 'line' }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: '#8b949e' } } },
+            scales: {
+                x: { grid: { color: '#21262d' }, ticks: { color: '#8b949e' } },
+                y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e' } }
             }
-
-            return { labels, data };
         }
+    });
 
-        // สร้าง Moving Average
-        function calculateMA(data, period) {
-            const ma = [];
-            for (let i = 0; i < data.length; i++) {
-                if (i < period - 1) {
-                    ma.push(null);
-                } else {
-                    const sum = data.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0);
-                    ma.push(Math.round((sum / period) * 100) / 100);
-                }
+    const volCtx = document.getElementById('volumeChart').getContext('2d');
+    if (volumeChart) volumeChart.destroy();
+    volumeChart = new Chart(volCtx, {
+        type: 'bar',
+        data: { labels, datasets: [{ label: 'Volume', data: volData, backgroundColor: mainColor + '88' }] },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { display: false },
+                y: { grid: { display: false }, ticks: { display: false } }
             }
-            return ma;
         }
+    });
+}
 
-        // แสดงรายการสินค้า
-        function renderProductList() {
-            const list = document.getElementById('productList');
-            list.innerHTML = products.map(p => `
-                <li class="product-item ${p.id === currentProduct.id ? 'active' : ''}" 
-                    onclick="selectProduct('${p.id}')">
-                    <div>
-                        <div class="product-name">${p.name}</div>
-                        <div style="font-size: 11px; color: #8b949e;">${p.unit}</div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div class="product-price ${p.change >= 0 ? 'price-up' : 'price-down'}">
-                            ${p.price.toLocaleString()}
-                        </div>
-                        <span class="price-change ${p.change >= 0 ? 'change-up' : 'change-down'}">
-                            ${p.change >= 0 ? '+' : ''}${p.change}%
-                        </span>
-                    </div>
-                </li>
-            `).join('');
-        }
+// เริ่มต้นทำงาน
+window.onload = () => {
+    renderProductList();
+    updateHeader();
+    updateChart();
+};
 
-        // เลือกสินค้า
-        function selectProduct(id) {
-            currentProduct = products.find(p => p.id === id);
-            renderProductList();
-            updateChart();
-            updateHeader();
-        }
-
-        // อัปเดต Header
-        function updateHeader() {
-            document.getElementById('currentProductName').textContent = currentProduct.name;
-            document.getElementById('currentPrice').textContent = `฿${currentProduct.price.toLocaleString()}`;
-            document.getElementById('currentPrice').className = `current-price ${currentProduct.change >= 0 ? 'price-up' : 'price-down'}`;
-            document.getElementById('priceChange').textContent = `${currentProduct.change >= 0 ? '+' : ''}${currentProduct.change}%`;
-            document.getElementById('priceChange').className = `price-change ${currentProduct.change >= 0 ? 'change-up' : 'change-down'}`;
-        }
-
-        // เปลี่ยน Timeframe
-        function changeTimeframe(tf) {
-            currentTimeframe = tf;
-            document.querySelectorAll('.timeframe-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent === tf);
-            });
-            updateChart();
-        }
-
-        // เปลี่ยนประเภทกราฟ
-        function changeChartType(type) {
-            currentChartType = type;
-            document.querySelectorAll('.chart-type-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent.includes(type === 'line' ? 'Line' : 'Bar'));
-            });
-            updateChart();
-        }
-
-        // สร้าง/อัปเดตกราฟ
-        function updateChart() {
-            const days = {
-                '1D': 1,
-                '1W': 7,
-                '1M': 30,
-                '3M': 90,
-                '1Y': 365
-            }[currentTimeframe];
-
-            const { labels, data } = generatePriceData(currentProduct.price, days);
-            const ma7 = calculateMA(data, 7);
-            const ma25 = calculateMA(data, Math.min(25, days));
-
-            const ctx = document.getElementById('priceChart').getContext('2d');
-
-            if (chart) {
-                chart.destroy();
-            }
-
-            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, currentProduct.change >= 0 ? 'rgba(63, 185, 80, 0.3)' : 'rgba(248, 81, 73, 0.3)');
-            gradient.addColorStop(1, 'rgba(13, 17, 23, 0)');
-
-            chart = new Chart(ctx, {
-                type: currentChartType,
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: currentProduct.name,
-                            data: data,
-                            borderColor: currentProduct.change >= 0 ? '#3fb950' : '#f85149',
-                            backgroundColor: currentChartType === 'line' ? gradient : (currentProduct.change >= 0 ? '#3fb95080' : '#f8514980'),
-                            borderWidth: 2,
-                            fill: currentChartType === 'line',
-                            tension: 0.1,
-                            pointRadius: days <= 7 ? 4 : 0,
-                            pointHoverRadius: 6,
-                        },
-                        {
-                            label: 'MA 7',
-                            data: ma7,
-                            borderColor: '#f0883e',
-                            borderWidth: 1.5,
-                            borderDash: [5, 5],
-                            fill: false,
-                            pointRadius: 0,
-                            tension: 0.3,
-                        },
-                        {
-                            label: 'MA 25',
-                            data: ma25,
-                            borderColor: '#a371f7',
-                            borderWidth: 1.5,
-                            borderDash: [5, 5],
-                            fill: false,
-                            pointRadius: 0,
-                            tension: 0.3,
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                color: '#8b949e',
-                                usePointStyle: true,
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#21262d',
-                            titleColor: '#f0f6fc',
-                            bodyColor: '#c9d1d9',
-                            borderColor: '#30363d',
-                            borderWidth: 1,
-                            padding: 12,
-                            displayColors: true,
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.dataset.label}: ฿${context.raw?.toLocaleString() || '-'}`;
-                                }
-                            }
-                        },
-                        zoom: {
-                            zoom: {
-                                wheel: { enabled: true },
-                                pinch: { enabled: true },
-                                mode: 'x',
-                            },
-                            pan: {
-                                enabled: true,
-                                mode: 'x',
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: {
-                                color: '#21262d',
-                            },
-                            ticks: {
-                                color: '#8b949e',
-                                maxTicksLimit: 10
-                            }
-                        },
-                        y: {
-                            grid: {
-                                color: '#21262d',
-                            },
-                            ticks: {
-                                color: '#8b949e',
-                                callback: function(value) {
-                                    return '฿' + value.toLocaleString();
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // เริ่มต้น
-        renderProductList();
-        updateHeader();
-        updateChart();
-
-        // จำลองการอัปเดตราคาแบบ Real-time
-        setInterval(() => {
-            products.forEach(p => {
-                const change = (Math.random() - 0.5) * 0.5;
-                p.change = Math.round((p.change + change * 0.1) * 10) / 10;
-                p.change = Math.max(-10, Math.min(10, p.change));
-            });
-            renderProductList();
-            if (document.visibilityState === 'visible') {
-                updateHeader();
-            }
-        }, 5000);
-    </script>
+// จำลองราคาขยับแบบ Real-time
+setInterval(() => {
+    products.forEach(p => {
+        p.change = Math.round((p.change + (Math.random() - 0.5) * 0.2) * 10) / 10;
+    });
+    renderProductList();
+    updateHeader();
+}, 5000);
+</script>
 </body>
 </html>
