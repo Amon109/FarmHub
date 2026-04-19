@@ -3,101 +3,100 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🌾 FarmHub – กราฟราคาพืชผลเรียลไทม์</title>
-
-  <!-- โหลดไลบรารีกราฟจาก CDN -->
-  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.min.js)"></script>
-
+  <title>🌾 FarmHub – กราฟราคาพืชผลไทย</title>
+  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js)"></script>
   <style>
     body {
       margin: 0;
       font-family: "Prompt", sans-serif;
-      background: #f4f9f4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      height: 100vh;
+      background: #f1f8f2;
+      color: #333;
+      text-align: center;
     }
     header {
       background: linear-gradient(90deg, #2e7d32, #81c784);
-      color: white;
-      width: 100%;
-      text-align: center;
-      padding: 12px 0;
-      font-size: 1.6em;
+      color: #fff;
+      padding: 12px;
+      font-size: 1.5em;
       font-weight: 600;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
     }
-    #chart {
-      flex: 1;
-      width: 95%;
-      margin-top: 10px;
+    section {
+      max-width: 900px;
+      margin: auto;
+      padding: 10px;
+    }
+    canvas {
+      background: #fff;
       border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
     }
     footer {
       background: #388e3c;
-      width: 100%;
       color: #fff;
-      text-align: center;
+      padding: 8px 0;
       font-size: 0.9em;
-      padding: 6px 0;
     }
   </style>
 </head>
 
 <body>
-  <header>🌾 FarmHub – กราฟราคาพืชผลเรียลไทม์ 🌽</header>
-  <div id="chart"></div>
-  <footer>อัปเดตราคาอัตโนมัติทุก 2 วินาที | © 2024 FarmHub</footer>
+  <header>🌾 FarmHub – กราฟราคาพืชผลไทย 🌽</header>
+  <section>
+    <h2>ราคาข้าวเปลือก (บาท/ตัน)</h2>
+    <canvas id="riceChart"></canvas>
+
+    <h2>ราคามันสำปะหลัง (บาท/กก.)</h2>
+    <canvas id="cassavaChart"></canvas>
+
+    <h2>ราคายางพารา (บาท/กก.)</h2>
+    <canvas id="rubberChart"></canvas>
+  </section>
+  <footer>ข้อมูลจำลองเพื่อการสาธิต | © 2024 FarmHub</footer>
 
   <script>
-    // ✅ สร้างกราฟแท่งเทียน
-    const chart = LightweightCharts.createChart(document.getElementById('chart'), {
-      layout: { backgroundColor: '#f4f9f4', textColor: '#222' },
-      grid: {
-        vertLines: { color: '#e0e6e0' },
-        horzLines: { color: '#e0e6e0' }
-      },
-      width: document.body.clientWidth * 0.95,
-      height: window.innerHeight * 0.7,
-      timeScale: { timeVisible: true, secondsVisible: false },
-    });
+    // ข้อมูลราคาจำลอง (เช่นสัปดาห์หรือเดือนย้อนหลัง)
+    const labels = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย."];
 
-    const candleSeries = chart.addCandlestickSeries({
-      upColor: '#4CAF50',
-      borderUpColor: '#4CAF50',
-      wickUpColor: '#4CAF50',
-      downColor: '#e53935',
-      borderDownColor: '#e53935',
-      wickDownColor: '#e53935'
-    });
+    const riceData = [9500, 9700, 9400, 9800, 10100, 10400];
+    const cassavaData = [2.2, 2.1, 2.3, 2.25, 2.4, 2.35];
+    const rubberData = [65, 68, 70, 67, 72, 74];
 
-    // ✅ สร้างข้อมูลจำลอง
-    let data = [];
-    let base = 10000;
-    let startTime = Math.floor(Date.now() / 1000) - 60 * 60;
-
-    for (let i = 0; i < 50; i++) {
-      const open = base + (Math.random() - 0.5) * 400;
-      const close = open + (Math.random() - 0.5) * 300;
-      const high = Math.max(open, close) + Math.random() * 200;
-      const low = Math.min(open, close) - Math.random() * 200;
-      data.push({ time: startTime + i * 600, open, high, low, close });
+    // ฟังก์ชันสร้างกราฟ
+    function createLineChart(canvasId, label, data, color) {
+      new Chart(document.getElementById(canvasId), {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label,
+            data,
+            borderColor: color,
+            backgroundColor: color + "33",
+            tension: 0.3,
+            fill: true,
+            pointRadius: 4,
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: { title: { display: true, text: "เดือน" } },
+            y: { beginAtZero: false }
+          }
+        }
+      });
     }
-    candleSeries.setData(data);
 
-    // ✅ เคลื่อนไหวกราฟทุก 2 วิ
-    setInterval(() => {
-      const last = data[data.length - 1];
-      const newTime = last.time + 600;
-      const open = last.close;
-      const close = open + (Math.random() - 0.5) * 400;
-      const high = Math.max(open, close) + Math.random() * 150;
-      const low = Math.min(open, close) - Math.random() * 150;
-      data.push({ time: newTime, open, high, low, close });
-      if (data.length > 80) data.shift();
-      candleSeries.setData(data);
-    }, 2000);
+    // สร้างกราฟแต่ละประเภทสินค้า
+    createLineChart("riceChart", "ราคาข้าวเปลือก", riceData, "#4CAF50");
+    createLineChart("cassavaChart", "ราคามันสำปะหลัง", cassavaData, "#FF9800");
+    createLineChart("rubberChart", "ราคายางพารา", rubberData, "#2196F3");
   </script>
 </body>
 </html>
