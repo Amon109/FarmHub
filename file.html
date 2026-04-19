@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FarmHub – กราฟราคาพืชผลเรียลไทม์</title>
+  <!-- โหลดไลบรารีจาก CDN -->
+  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js)"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Prompt", sans-serif;
+      background: #f1f8f2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+    }
+    header {
+      background: #3c8d40;
+      color: white;
+      width: 100%;
+      text-align: center;
+      padding: 10px 0;
+      font-size: 1.5em;
+      font-weight: 600;
+    }
+    #chart {
+      flex: 1;
+      width: 95%;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>🌾 FarmHub – กราฟราคาพืชผลเรียลไทม์ 🌽</header>
+  <div id="chart"></div>
+
+  <script>
+    // สร้างกราฟ
+    const container = document.getElementById("chart");
+    const chart = LightweightCharts.createChart(container, {
+      layout: { backgroundColor: '#f9fff8', textColor: '#333' },
+      grid: { vertLines: { color: '#e0e6e0' }, horzLines: { color: '#e0e6e0' } },
+      width: container.clientWidth,
+      height: window.innerHeight * 0.7,
+      timeScale: { timeVisible: true, secondsVisible: false },
+    });
+
+    const candleSeries = chart.addCandlestickSeries({
+      upColor: '#4CAF50',
+      borderUpColor: '#4CAF50',
+      wickUpColor: '#4CAF50',
+      downColor: '#e53935',
+      borderDownColor: '#e53935',
+      wickDownColor: '#e53935'
+    });
+
+    // ข้อมูลจำลอง
+    let data = [];
+    let basePrice = 10000;
+    let start = Math.floor(Date.now() / 1000) - 60 * 50;
+    for (let i = 0; i < 50; i++) {
+      const open = basePrice + (Math.random() - 0.5) * 500;
+      const close = open + (Math.random() - 0.5) * 400;
+      const high = Math.max(open, close) + Math.random() * 200;
+      const low = Math.min(open, close) - Math.random() * 200;
+      data.push({ time: start + i * 600, open, high, low, close });
+    }
+    candleSeries.setData(data);
+
+    // อัปเดตแบบเรียลไทม์
+    setInterval(() => {
+      const last = data[data.length - 1];
+      const newTime = last.time + 600;
+      const open = last.close;
+      const close = open + (Math.random() - 0.5) * 400;
+      const high = Math.max(open, close) + Math.random() * 200;
+      const low = Math.min(open, close) - Math.random() * 200;
+      data.push({ time: newTime, open, high, low, close });
+      if (data.length > 100) data.shift();
+      candleSeries.setData(data);
+    }, 2000);
+  </script>
+</body>
+</html>
