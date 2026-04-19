@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🌾 FarmHub – กราฟราคาพืชผลไทย</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌾 FarmHub – กราฟราคาพืชผลไทย 🌽</title>
 
-  <!-- โหลด Chart.js จาก jsDelivr (รองรับบน GitHub Pages แน่นอน) -->
-  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js)"></script>
+  <!-- ✅ ใช้ Chart.js จาก Cloudflare CDN (ปลอดภัยกับ GitHub Pages) -->
+  <script src="[cdnjs.cloudflare.com](https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js)" integrity="sha512-Wn9njaEUfTuqogwO/ibKtm4iE7EkSA4YmSz9jAQjl52VlxZZjJvGLR7ApAg9OD+zxBHUCtXs27+zdFRm8+TDqA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <style>
     body {
@@ -17,10 +17,10 @@
       text-align: center;
     }
     header {
-      background: #2e7d32;
+      background: linear-gradient(90deg, #2e7d32, #81c784);
       color: white;
       padding: 15px;
-      font-size: 1.6em;
+      font-size: 1.5em;
       font-weight: bold;
     }
     section {
@@ -29,34 +29,34 @@
       padding: 10px;
     }
     canvas {
-      background: white;
+      background: #fff;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      margin: 30px auto;
+      margin: 20px 0;
       width: 90% !important;
       max-width: 800px;
       height: 400px !important;
     }
     footer {
       background: #388e3c;
-      color: white;
-      padding: 10px 0;
+      color: #fff;
+      padding: 8px 0;
       font-size: 0.9em;
     }
   </style>
 </head>
 
 <body>
-  <header>🌾 FarmHub – กราฟราคาพืชผลไทย 🌽</header>
+  <header>🌾 FarmHub – กราฟราคาพืชผลไทย 🌽</header>
 
   <section>
-    <h2>ราคาข้าวเปลือก (บาท/ตัน)</h2>
+    <h2>ราคาข้าวเปลือก (บาท/ตัน)</h2>
     <canvas id="riceChart"></canvas>
 
-    <h2>ราคามันสำปะหลัง (บาท/กก.)</h2>
+    <h2>ราคามันสำปะหลัง (บาท/กก.)</h2>
     <canvas id="cassavaChart"></canvas>
 
-    <h2>ราคายางพารา (บาท/กก.)</h2>
+    <h2>ราคายางพารา (บาท/กก.)</h2>
     <canvas id="rubberChart"></canvas>
   </section>
 
@@ -70,55 +70,54 @@
         label: "ราคาข้าวเปลือก",
         data: [9500, 9700, 9400, 9800, 10100, 10400],
         borderColor: "#4CAF50",
-        backgroundColor: "#A5D6A733"
+        backgroundColor: "#A5D6A7"
       },
       cassava: {
         label: "ราคามันสำปะหลัง",
-        data: [2.2, 2.0, 2.15, 2.3, 2.35, 2.4],
+        data: [2.2, 2.0, 2.2, 2.3, 2.35, 2.4],
         borderColor: "#FF9800",
-        backgroundColor: "#FFE0B233"
+        backgroundColor: "#FFE0B2"
       },
       rubber: {
         label: "ราคายางพารา",
         data: [65, 68, 70, 67, 72, 74],
         borderColor: "#2196F3",
-        backgroundColor: "#BBDEFB33"
+        backgroundColor: "#BBDEFB"
       }
     };
 
-    function drawChart(canvasId, dataset) {
-      new Chart(document.getElementById(canvasId).getContext("2d"), {
+    function makeChart(canvasId, info) {
+      const ctx = document.getElementById(canvasId);
+      new Chart(ctx, {
         type: "line",
         data: {
           labels: months,
           datasets: [{
-            label: dataset.label,
-            data: dataset.data,
-            borderColor: dataset.borderColor,
-            backgroundColor: dataset.backgroundColor,
-            fill: true,
+            label: info.label,
+            data: info.data,
+            borderColor: info.borderColor,
+            backgroundColor: info.backgroundColor,
             tension: 0.3,
-            pointRadius: 5,
-            pointBackgroundColor: dataset.borderColor
+            fill: true,
+            pointRadius: 4,
+            pointBackgroundColor: info.borderColor
           }]
         },
         options: {
-          responsive: true,
           plugins: {
-            legend: {display: false}
+            legend: { display: false }
           },
           scales: {
-            x: {title: {display: true, text: "เดือน"}},
-            y: {title: {display: true, text: "ราคา"}}
+            x: { title: { display: true, text: "เดือน" }},
+            y: { title: { display: true, text: "ราคา" }}
           }
         }
       });
     }
 
-    // สร้างกราฟแต่ละชนิด
-    drawChart("riceChart", datasets.rice);
-    drawChart("cassavaChart", datasets.cassava);
-    drawChart("rubberChart", datasets.rubber);
+    makeChart("riceChart", datasets.rice);
+    makeChart("cassavaChart", datasets.cassava);
+    makeChart("rubberChart", datasets.rubber);
   </script>
 </body>
 </html>
